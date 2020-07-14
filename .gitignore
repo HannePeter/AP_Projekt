@@ -1,0 +1,9 @@
+rg/*~
+code/ch*
+code/dsp_c
+*.pdf
+*.tex~
+ausarbeitung/.ipynb_checkpoints/
+
+# for macOS
+.DS_Store

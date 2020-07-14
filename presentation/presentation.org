@@ -1,0 +1,292 @@
+#+TITLE:     Digitale Signalverarbeitung in Python
+#+AUTHOR:    Hanne, Talbot, Radzieda
+#+EMAIL:     s70196@beuth-hochschule.de
+#+DATE:      2020-06-16
+#+startup:   beamer
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [8pt]
+#+OPTIONS:   toc:nil
+
+
+
+* DSP mit Python - Inhalt
+- Vorstellung Bibliothek NumPy, SciPy, matplotlib
+- Vergleiche von Codebeispielen Python / Matlab
+- Geschwindigkeitsvergleiche
+- Hardwarebeschleunigung
+
+
+* DSP mit Python - Numpy
+** NumPy
+- Bibliothek für mehrdimensionale Arrays, Matrizen und Vektoren
+- Entstanden 1995(als Numeric), 2006 als NumPy
+- Matlab 1984 (kommerziell)
+- NumPy / Matlab verwenden gleiche Libs
+
+
+* DSP mit Python - Numpy
+*** Erklärung                                                               :BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.5
+    :END:
+- 2 zufällige Arrays/Listen werden erzeugt und jeweils zusammen addiert
+- für das Erzeugen, egal wie vielen Arrays, wird bei NumPy fast die gleiche Zeit benötigt
+ 
+*** Unterschied Array / Listen                             :B_ignoreheading:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.5
+    :END:      
+    #+ATTR_LATEX: width=\textwidth
+    [[./image/vergleich_array.png]]
+
+#+LaTeX:\vspace{1mm}
+Quelle Bild:
+https://miro.medium.com/max/792/1*rQoLViAcg2Hj8AD1EmONAg.png
+
+	
+* DSP mit Python - Numpy
+** Python Listen
+- keine Angabe von Datentypen und Anzahl der Elemente
+- Daten von Listen sind im gesamten RAM verstreut und durch Zeiger referenziert
+- Standardmäßig 1-Dimensional (Bei n-Dimensionale Listen werden 1D Listen in einer 1D Liste gespeichert)
+- Elementweise Operationen auf Listen ist nicht möglich
+
+** NumPy Array
+- Speichern einen definierten Datentyp
+- Anzahl der Elemente wird im voraus angegeben
+- Verbraucht weniger Speicher, da zusammenhängend im RAM gespeichert
+
+
+* DSP mit Python - Numpy
+** Python Liste
+#+begin_src python
+>>> a = [1, 2, 3]
+>>> b = [4, 5, 6]
+>>> a + b
+[1, 2, 3, 4, 5, 6]
+#+end_src
+** np-Array
+#+begin_src python
+>>> import numpy as np
+>>> c = np.array([1, 2, 3])
+>>> d = np.array([4, 5, 6])
+>>> c + d
+array([5, 7, 9])
+#+end_src
+
+
+* DSP mit Python - Numpy
+** Python Liste
+#+begin_src python
+>>> a = [1, 2, 3]
+>>> a * 3
+[1, 2, 3, 1, 2, 3, 1, 2, 3]
+#+end_src
+** np-Array
+#+begin_src python
+>>> import numpy as np
+>>> b = np.array([1, 2, 3])
+>>> b * 3
+array([3, 6, 9])
+#+end_src
+
+
+* DSP mit Python - SciPy und matplotlib
+** SciPy Funktionen
+- Gute Online-Dokumentation (https://docs.scipy.org/doc/scipy/reference/)
+- cluster, fft, signal, stats uvm.
+- Basiert auf NumPy
+
+** matplotlib
+- Eine Bibliothek zum Plotten von Grafen
+- sehr ähnliche Funktionen wie bei Matlab / Octave
+
+
+* DSP mit Python - matplotlib
+*** Octave                             :B_ignoreheading:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.5
+    :END:      
+    #+ATTR_LATEX: width=\textwidth
+    [[./image/vergleich_octave.png]]
+ 
+*** matplotlib                             :BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.5
+    :END:      
+    #+ATTR_LATEX: width=\textwidth
+    [[./image/Vergleich_python.png]]
+
+
+* DSP mit Python - matplotlib
+*** surface plot                             :BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 1
+    :END:      
+    #+ATTR_LATEX: width=\textwidth
+    [[./image/3d_python.png]]
+#+LaTeX:\vspace{1mm}
+Quelle:
+https://matplotlib.org/mpl_toolkits/mplot3d/tutorial.html 
+
+
+* DSP mit Python - Testsystem
+** Hardware
+- Intel Core i5 3570k, 3000 Mhz
+- 16GB DDR3 1866 MHz, 10-11-10-30 1T
+- Manjaro Linux, Kernel 5.4.44
+
+** Software
+- numpy 1.18.5
+- scipy 1.4.1
+- matplotlib 3.2.1
+- Octave 5.2.0
+- gcc 10.1.0
+
+
+* DSP mit Python - Simulation
+** Konzept
+- Diversity-Technik (Raumdiversität) mit drei Kanälen
+- 20k samples / Waveform
+- Einzelne Kanäle zeitlich versetzt
+
+** Durchführung
+- Umsetzung in Octave, Python, C
+- Rauschminderung via Averaging
+- Upsampling via FFT
+- Delay-Korrektur via cross-correlation
+
+
+* DSP mit Python - Entwicklung Python
+- Zuerst Entwicklung des Octave Script
+- Daraus Entwicklung des Python Script 
+  - So nah wie möglich mit Octave Script
+- Aquivalente Funktionen von den drei Bibliotheken finden:
+  - Argumente anpassen 
+    - insbesondere Nummerierung von Indizes (Octave 1 bis N; Python 0 bis N-1)
+  - Rückgabewerte anpassen 
+    - (z.B. numpy.arange => ndarray 0 bis N-1; Octave vektor => 1:N)
+
+
+* DSP mit Python - Codevergleich
+** Python
+#+begin_src python
+for i in range(avg_num):
+    ch1_waveform_avg += ch1_waveforms[i]
+
+ch1_waveform_avg /= avg_num
+#+end_src
+** Octave
+#+begin_src octave
+for i = 1:avg_num
+    ch1_waveform_avg += ch1_waveforms(i, :);
+endfor
+
+ch1_waveform_avg /= avg_num;
+#+end_src
+
+
+* DSP mit Python - Codevergleich
+** Python
+#+begin_src python
+ch1_S_up = np.concatenate((ch1_S[0:int(wflen/2)], np.zeros(wflen), 
+                           ch1_S[int(wflen/2):wflen]))
+...
+ch1_waveform_upsamp = np.real(scipy.fftpack.ifft(ch1_S_up)) * 2
+#+end_src
+** Octave
+#+begin_src octave
+ch1_S_up = [ch1_S(1:wflen/2), zeros(1, wflen), ch1_S(wflen/2+1:wflen)];
+...
+ch1_waveform_upsamp = real(ifft(ch1_S_up)) * 2;
+#+end_src
+
+
+* DSP mit Python - Codevergleich
+** Vorteile Python 
+- Highlevel Programmiersprache -> mehr Flexibilität
+- Mit NumPy und SciPy Libraries -> etwas schneller
+- Vgl. Matlab -> kostenlos "open-source" Software
+  - Von einer größeren Community entwickelt
+  - Einfacher für Dritte die Code/Ergebnisse zu benutzen
+** Vorteile Octave (Matlab)
+- Speziell für diesen Art von Anwendung entwickelt
+  - Keine zusätzliche Bibliotheken benötigt
+- Code ist teilweise einfacher zu verstehen und schreiben
+- In vielen Bereichen bereits etabliert
+  - Umstellung zu Python kostet Zeit und Arbeit
+
+
+* DSP mit Python - Geschwindigkeit
+- Teilweise Unterscheide zwischen Python Bibliothekten
+- SciPy-fft war 2 ms schneller als numpy-fft
+** Computetime verschiedene Codes:
+- Python: ~18.3 ms
+- Ocatve: ~26.3 ms
+- C: ~99.7 ms
+
+
+* DSP mit Python - Geschwindigkeitsanalyse
+- Octave / numpy nutzen BLAS / LAPACK
+- Optimiert für Vektor- u. Matrixoperationen
+- Vorteile entsprechend auch bei Scipy
+- Beachtliche Geschwindigkeit bei geringem Entwicklungsaufwand
+
+
+* DSP mit Python - FPGA
+** NI cRio
+- Embedded System mit RT Linux und FPGA
+- FPGA kann u.a. via LabWiew programmiert werden
+- FPGA kann via API von Code angesprochen werden
+- Geringer Entwicklungsaufwand
+
+
+* DSP mit Python - FPGA
+** Beispiel cRio Python Code
+#+begin_src python
+with Session("MyBitfile.lvbitx", "RIO0") as session:
+    my_control = session.registers['My Control']
+    my_indicator = session.registers['My Indicator']
+    my_control.write(4)
+    data = my_indicator.read()
+    print(data)  # prints 16
+#+end_src
+** Beispiel cRio LabView FPGA
+#+LaTeX:\hspace{5mm}
+#+LaTeX:\includegraphics[width = 0.3\textwidth]{image/labview_fpga.png}
+
+#+LaTeX:\vspace{10mm}
+Quelle:
+https://nifpga-python.readthedocs.io/en/latest/examples/basic_examples.html
+
+
+* DSP mit Python - FPGA
+#+LaTeX:\includegraphics[width = 0.5\textwidth]{image/pynq.jpg}
+** Xilinx PYNQ
+- Entwicklung via Jupyter Notbook im Webbrowser
+- Kostengünstige Boards verfügbar
+- Für privatgebrauch geeignet
+
+#+LaTeX:\vspace{15mm}
+Quelle Bild:
+https://shop.trenz-electronic.de/media/image/47/bb/33/29034_1.jpg
+
+
+* DSP mit Python - Ende
+** ENDE!
+
+
+* DSP mit Python - Quellen
+- https://www.scipy.org/
+- https://numpy.org/
+- https://matplotlib.org/
+- https://www.geeksforgeeks.org/python-lists-vs-numpy-arrays/ 
+- https://matplotlib.org/mpl_toolkits/mplot3d/tutorial.html
+- http://www.pynq.io/
+- https://nifpga-python.readthedocs.io/en/latest/
+

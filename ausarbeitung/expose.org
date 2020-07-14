@@ -1,0 +1,42 @@
+#+OPTIONS: toc:nil
+
+* Digitale Signalverarbeitung mit Python
+
+Die Programmiersprache 'Python' ist in der Wissenschaft aufgrund ihrer
+Flexibilität und Einfachheit sehr weit verbreitet. Wenn es speziell
+um digitale Signalverarbeitung (DSP) geht, werden in den meisten
+Fällen andere Sprachen angewandt. Da es auf diesem Gebiet sehr oft
+auf Geschwindigkeit ankommt, werden FPGAs sowie die sehr hardwarenahe
+Programmiersprache 'C' eingesetzt. Auch 'Matlab' findet aufgund des
+enormen Standardumfangs an gängigen DSP-Funktionen oft Verwendung.
+
+In dieser Ausarbeitung wollen wir den Einsatz von Python im Umfeld
+der digitalen Signalverarbeitung beleuchten. Durch den Einsatz
+zusätzlicher Bibliotheken kann der Funktionsumfang für dieses
+Spezialgebiet erweitert werden. Des weiteren gibt es erste
+Möglichkeiten Python-Code auf einem FPGA auszuführen bzw. in
+FPGA-Projekte einzubinden, ohne komplett neue Programme dafür
+entwickeln zu müssen. Zusätzlich soll die Laufzeit der DSP-Berechnung
+in Python mit den Berechnungen in Matlab und C vergleichen werden.
+
+** Gliederung
+*** Vorstellung der Bibliotheken
+    - NumPy
+    - SciPy
+    - Matplotlib
+*** Anwendung
+    - Vergleich Code Python / Matlab
+    - Vergleich Geschwindigkeit Python / Matlab / C
+*** FPGA
+    - NI compactRIO
+    - Xilinx PYNQ
+
+
+
+** Orga
+
+Die ist eine grobe Fassung unseres Themas. Für Vorschläge und Kritiken sind wir selbstverständlich offen.
+
+*** Wunschtermin
+    - 09.06.2020
+    - Gerne auch später, da Kind(er) bei zwei der Gruppenmitglieder vorhanden.
